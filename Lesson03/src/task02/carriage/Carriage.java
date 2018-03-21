@@ -10,4 +10,10 @@ public abstract class Carriage {
         return number++;
     }
 
+    abstract int getPassengers();
+
+    abstract int getComfortLevel();
+
+    abstract int getLuggage();
+
 }

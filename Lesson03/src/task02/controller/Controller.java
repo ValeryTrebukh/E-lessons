@@ -44,7 +44,7 @@ public class Controller {
 
     private static Train<Passenger> makeTrain(int len) {
 
-        Train<Passenger> result = new Train<>(len);
+        Train<Passenger> result = new Train<>();
 
         for (int i = 0; i < len; i++) {
             Passenger p = requestPassengerCarriage();

@@ -1,14 +1,15 @@
 package task02.view;
 
-import task02.carriage.Passenger;
+import task02.carriage.Carriage;
 
-public class View {
+import java.util.List;
 
-    public void print(Passenger[] carriages) {
+public class View<T extends Carriage> {
+
+    public void print(List<T > carriages) {
         System.out.println("ID\tPASSENGERS\tLUGGAGE\tCOMFORT");
-        for (Passenger c : carriages) {
-            if(c != null)
-                System.out.println(c.toString());
+        for (T c : carriages) {
+            System.out.println(c.toString());
         }
         System.out.println();
     }

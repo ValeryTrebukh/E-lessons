@@ -1,37 +1,27 @@
 package task02.carriage;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
-public class Train<T extends Passenger> {
+public class Train<T extends Carriage> {
 
-    private Passenger[] carriages;
-
-    public Train(int number) {
-        carriages = new Passenger[number];
-    }
+    private List<T> carriages = new ArrayList<>();
 
 
     public void addCarriage(T carriage) {
-        for (int i = 0; i < carriages.length; i++) {
-            if(carriages[i] == null) {
-                carriages[i] = carriage;
-                break;
-            }
-        }
+        carriages.add(carriage);
     }
 
 
 //    Sort carriages by comfort level
     public void sort() {
-        Arrays.sort(carriages, Comparator.comparingInt(Passenger::getComfortLevel));
+        Collections.sort(carriages, Comparator.comparingInt(Carriage::getComfortLevel));
     }
 
 //    Get total number of passengers in train
     public int calcPass() {
         int result = 0;
 
-        for(Passenger p : carriages) {
+        for(T p : carriages) {
             result += p.getPassengers();
         }
 
@@ -42,7 +32,7 @@ public class Train<T extends Passenger> {
     public int calcLug() {
         int result = 0;
 
-        for(Passenger p : carriages) {
+        for(T p : carriages) {
             result += p.getLuggage();
         }
 
@@ -50,19 +40,20 @@ public class Train<T extends Passenger> {
     }
 
 //    Find carriages which contains requested (or greater) number of passengers
-    public Passenger[] find(int size) {
-        Passenger[] result = Arrays.copyOf(carriages, carriages.length);
+    public List<T> find(int size) {
+        List<T> result = new ArrayList<>();
 
-        for(int i = 0; i < result.length; i++) {
-            if(carriages[i].getPassengers() < size) {
-                result[i] = null;
+        for(T car : carriages) {
+            if(car.getPassengers() > size) {
+                result.add(car);
             }
         }
+
         return result;
     }
 
 
-    public Passenger[] getCarriages() {
+    public List<T> getCarriages() {
         return carriages;
     }
 }
