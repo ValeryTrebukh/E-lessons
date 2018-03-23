@@ -5,7 +5,7 @@ public class Triangle extends Shape {
     private int base;
     private int height;
 
-    public Triangle(String shapeColor, int height, int base) {
+    public Triangle(Color shapeColor, int height, int base) {
         super(shapeColor);
         this.height = height;
         this.base = base;

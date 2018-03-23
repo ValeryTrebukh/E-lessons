@@ -4,10 +4,10 @@ import task02.entity.*;
 
 public class Generator {
 
-    private static String[] colors = {"red", "blue", "green", "white", "brown", "purple", "yellow", "pink"};
+    private static Color[] colors = Color.values();
 
 
-    private static String getColor() {
+    private static Color getColor() {
         return colors[(int)(Math.random()*colors.length)];
     }
 

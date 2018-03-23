@@ -16,7 +16,7 @@ public class ShapeModel {
         shapes = Generator.generate(12);
     }
 
-    public int getArea() {
+    public int getTotalArea() {
 
         if (totalArea == 0) {
             for(Shape sh : shapes) {
@@ -27,7 +27,7 @@ public class ShapeModel {
     }
 
 
-    public int getArea(Shape shape) {
+    public int getAreaByShape(Shape shape) {
 
         int result = 0;
 

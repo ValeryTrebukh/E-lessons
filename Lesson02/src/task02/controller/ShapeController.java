@@ -17,11 +17,11 @@ public class ShapeController {
     public void run() {
         view.print(model.getShapes());
 
-        view.print(model.getArea());
+        view.print(model.getTotalArea());
 
-        view.print(model.getArea(new Triangle("red", 1, 1)));
-        view.print(model.getArea(new Rectangle("red", 1, 1)));
-        view.print(model.getArea(new Circle("red", 1)));
+        view.print(model.getAreaByShape(new Triangle(Color.RED, 1, 1)));
+        view.print(model.getAreaByShape(new Rectangle(Color.RED, 1, 1)));
+        view.print(model.getAreaByShape(new Circle(Color.RED, 1)));
 
         model.sortByArea();
         view.print(model.getShapes());

@@ -2,13 +2,13 @@ package task02.entity;
 
 public abstract class Shape implements Drawable {
 
-    private String shapeColor;
+    private Color shapeColor;
 
-    Shape(String shapeColor) {
+    Shape(Color shapeColor) {
         this.shapeColor = shapeColor;
     }
 
-    public String getShapeColor() {
+    public Color getShapeColor() {
         return shapeColor;
     }
 
