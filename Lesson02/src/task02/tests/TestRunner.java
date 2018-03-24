@@ -6,12 +6,12 @@ import org.junit.runner.notification.Failure;
 
 public class TestRunner {
     public static void main(String[] args) {
-        Result result = JUnitCore.runClasses(EntityTest.class);
+        Result result = JUnitCore.runClasses(EntityTest.class, ShapeModelTest.class);
+
+        System.out.println("Success: " + result.wasSuccessful());
 
         for (Failure failure : result.getFailures()) {
             System.out.println(failure.toString());
         }
-
-        System.out.println(result.wasSuccessful());
     }
 }

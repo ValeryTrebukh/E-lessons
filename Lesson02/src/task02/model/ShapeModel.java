@@ -53,4 +53,9 @@ public class ShapeModel {
     public Shape[] getShapes() {
         return shapes;
     }
+
+    // for testing purpose only
+    public void setShapes(Shape[] shapes) {
+        this.shapes = shapes;
+    }
 }
