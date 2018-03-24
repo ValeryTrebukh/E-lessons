@@ -11,17 +11,6 @@ public class Address {
         this.room = room;
     }
 
-    public String getStreet() {
-        return street;
-    }
-
-    public String getBuilding() {
-        return building;
-    }
-
-    public String getRoom() {
-        return room;
-    }
 
     @Override
     public boolean equals(Object o) {

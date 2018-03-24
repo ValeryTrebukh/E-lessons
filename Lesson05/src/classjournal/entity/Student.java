@@ -16,25 +16,6 @@ public class Student {
         this.address = address;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
 
     @Override
     public String toString() {

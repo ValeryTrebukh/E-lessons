@@ -15,26 +15,6 @@ public class JournalModel {
 
     }
 
-    String requestFirstName() {
-        return null;
-    }
-
-    String requestLastName() {
-        return null;
-    }
-
-    String requestDateOfBirth() {
-        return null;
-    }
-
-    String requestPhoneNumber() {
-        return null;
-    }
-
-    String requestAddress() {
-        return null;
-    }
-
     public List<Student> getStudents() {
         return students;
     }
