@@ -1,16 +1,14 @@
 package classjournal.entity;
 
-import java.util.Date;
-
 public class Student {
 
     private String lastName;
     private String firstName;
     private String dateOfBirth;
     private String phoneNumber;
-    private String address;
+    private Address address;
 
-    public Student(String lastName, String firstName, String dateOfBirth, String phoneNumber, String address) {
+    public Student(String lastName, String firstName, String dateOfBirth, String phoneNumber, Address address) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.dateOfBirth = dateOfBirth;
@@ -34,7 +32,7 @@ public class Student {
         return phoneNumber;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 

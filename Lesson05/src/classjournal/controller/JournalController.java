@@ -1,5 +1,6 @@
 package classjournal.controller;
 
+import classjournal.entity.Address;
 import classjournal.entity.Student;
 import classjournal.model.JournalModel;
 import classjournal.utils.Helper;
@@ -47,11 +48,11 @@ public class JournalController {
         view.printMessage("Enter student's date of birth in format 'mm.dd.yyyy'");
         String dateOfBirth = requestDateOfBirth();
 
-        view.printMessage("Enter student's address in format 'Street, building, apartments'");
-        String address = requestAddress();
-
         view.printMessage("Enter student's phone number");
         String phoneNumber = requestPhoneNumber();
+
+        view.printMessage("Enter student's address");
+        Address address = requestAddress();
 
         return new Student(lastName, firstName, dateOfBirth, phoneNumber, address);
     }
@@ -101,21 +102,74 @@ public class JournalController {
     }
 
 
-    private String requestAddress() {
+    private Address requestAddress() {
 
-        String address = Helper.requestString();
+        view.printMessage("Enter street name");
+        String street = requestStreet();
 
-        while (!isValidAddress(address)) {
-            view.printMessage(INCORRECT_INPUT);
-            address = Helper.requestString();
-        }
+        view.printMessage("Enter building number");
+        String building = requestBuilding();
 
-        return address;
+        view.printMessage("Enter room number");
+        String room = requestRoom();
+
+        return new Address(street, building, room);
     }
 
-    private boolean isValidAddress(String address) {
+    private String requestStreet() {
+        String street = Helper.requestString();
 
-        String regex = "(\\d+|[a-zA-Z]+)( [a-zA-Z]+)*, \\d{1,5}[a-zA-Z]?, \\d{1,5}";
+        while (!isValidStreet(street)) {
+            view.printMessage(INCORRECT_INPUT);
+            street = Helper.requestString();
+        }
+
+        return street;
+    }
+
+    private boolean isValidStreet(String street) {
+
+        String regex = "(\\d+|[a-zA-Z]+)( [a-zA-Z]+)*";
+        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(street);
+
+        return m.matches();
+    }
+
+    private String requestBuilding() {
+        String bldg = Helper.requestString();
+
+        while (!isValidBuilding(bldg)) {
+            view.printMessage(INCORRECT_INPUT);
+            bldg = Helper.requestString();
+        }
+
+        return bldg;
+    }
+
+    private boolean isValidBuilding(String address) {
+
+        String regex = "\\d{1,5}[a-zA-Z]?";
+        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(address);
+
+        return m.matches();
+    }
+
+    private String requestRoom() {
+        String room = Helper.requestString();
+
+        while (!isValidRoom(room)) {
+            view.printMessage(INCORRECT_INPUT);
+            room = Helper.requestString();
+        }
+
+        return room;
+    }
+
+    private boolean isValidRoom(String address) {
+
+        String regex = "\\d{1,5}";
         Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(address);
 
@@ -124,7 +178,6 @@ public class JournalController {
 
 
     private String requestPhoneNumber() {
-
         String phoneNumber = Helper.requestString();
 
         while (!isValidPhoneNumber(phoneNumber)) {
