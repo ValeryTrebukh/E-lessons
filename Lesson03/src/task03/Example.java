@@ -16,6 +16,7 @@ public class Example {
         System.out.println(mt.name());
         System.out.println(mt.toString());
         System.out.println(mt.ordinal());
+        System.out.println((MyEnumTest.valueOf("THIRD")).ordinal());
 
         MyEnumTest mt2 = (MyEnumTest)MyEnumTest.valueOf("SECOND");
 
