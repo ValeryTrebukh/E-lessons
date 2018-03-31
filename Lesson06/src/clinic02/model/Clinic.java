@@ -1,11 +1,12 @@
 package clinic02.model;
 
+import clinic02.utils.FileWorker;
 import clinic02.utils.Helper;
 
 import java.io.*;
 import java.util.*;
 
-public class Clinic implements Serializable {
+public class Clinic {
 
     private Patient[] patients = Helper.getPatients(27);
 
@@ -65,42 +66,13 @@ public class Clinic implements Serializable {
 
     public void loadFromFile(String fileName) throws IOException {
 
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+        patients =  FileWorker.loadFromFile(fileName);
 
-            List<Patient> list = new ArrayList<>();
-
-            while(true) {
-                Patient p;
-
-                try{
-                    p = (Patient)ois.readObject();
-                    list.add(p);
-                } catch (EOFException ignore) {
-                    break;
-                }
-            }
-
-            patients = (Patient[]) list.toArray();
-            patients = new Patient[list.size()];
-
-            for(int i = 0; i < list.size(); i++) {
-                patients[i] = list.get(i);
-            }
-
-        } catch (ClassNotFoundException e) {
-            System.out.println("cnf");
-        }
     }
 
     public void saveToFile(String fileName) {
 
-        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
+        FileWorker.saveToFile(fileName, patients);
 
-            for(Patient p : patients) {
-                oos.writeObject(p);
-            }
-
-        } catch (IOException ignore) {
-        }
     }
 }

@@ -19,9 +19,8 @@ public class ClinicController {
     }
 
     public void run() {
-        boolean exit = false;
 
-        while(!exit) {
+        while(true) {
 
             view.printMenu();
             int input = Helper.requestInt();
@@ -40,18 +39,22 @@ public class ClinicController {
                     loadFromFile();
                     break;
                 case 5:
-                    view.println("Enter destination location: ");
-                    clinic.saveToFile(Helper.requestString());
+                    saveToFile();
                     break;
                 case 0:
-                    exit = true;
                     view.println("Bye!");
+                    System.exit(0);
                     break;
                 default:
                     view.println("No such option in menu.");
                     break;
             }
         }
+    }
+
+    private void saveToFile() {
+        view.println("Enter destination location: ");
+        clinic.saveToFile(Helper.requestString());
     }
 
     private void loadFromFile() {
@@ -67,7 +70,6 @@ public class ClinicController {
 
             }
         }
-
     }
 
     private void showByDiagnosis() {
