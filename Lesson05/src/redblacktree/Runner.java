@@ -1,26 +1,40 @@
 package redblacktree;
 
+import java.util.Arrays;
+
 public class Runner {
 
-    public void run1() {
-        Tree1 tree1 = new Tree1();
+    public void run() {
 
-        tree1.insert(new Node(1))
-            .insert(new Node(2))
-            .insert(new Node(3));
+        int[] values = generateArray(9);
 
-        tree1.print();
+        buildTree(values);
+
+        System.out.println();
+
+        Arrays.sort(values);
+
+        buildTree(values);
     }
 
-    public void run() {
+    private void buildTree(int[] values) {
         Tree tree = new Tree();
 
-        tree.insert(1);
-        tree.insert(2);
-        tree.insert(3);
-        tree.insert(4);
-//        tree.insert(5);
+        for(int value : values) {
+            tree.insert(value);
+        }
+
+        System.out.println(Arrays.toString(values));
 
         tree.print();
+    }
+
+    private int[] generateArray(int size) {
+        int[] result = new int[size];
+
+        for(int i = 0; i < size; i++) {
+            result[i] = (int)(Math.random()*100);
+        }
+        return result;
     }
 }

@@ -7,16 +7,16 @@ public class Tree {
 
     private Node root;
 
-    void insert(int val) {
+    public void insert(int val) {
 
         Node node = new Node(val);
 
         root = insert(root, node);
 
-        reorder(root, node);
+        reorder(node);
     }
 
-    Node insert(Node root, Node node) {
+    private Node insert(Node root, Node node) {
 
         if(root == null) {
             return node;
@@ -34,7 +34,7 @@ public class Tree {
         return root;
     }
 
-    void reorder(Node root, Node node) {
+    private void reorder(Node node) {
 
         Node p = null;
         Node g = null;
@@ -94,7 +94,7 @@ public class Tree {
         root.isBlack = true;
     }
 
-    void rotateLeft(Node node) {
+    private void rotateLeft(Node node) {
 
         Node pt = node.right;
         node.right = pt.left;
@@ -117,7 +117,7 @@ public class Tree {
         node.parent = pt;
     }
 
-    void rotateRight(Node node) {
+    private void rotateRight(Node node) {
 
         Node pt = node.left;
 
@@ -143,7 +143,7 @@ public class Tree {
 
     }
 
-    void print() {
+    public void print() {
 
         List<Node> list = new ArrayList<>();
         list.add(root);
