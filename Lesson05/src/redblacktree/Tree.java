@@ -7,6 +7,8 @@ public class Tree {
 
     private Node root;
 
+    private List<StringBuilder> printedTree = new ArrayList<>();
+
     public void insert(int val) {
 
         Node node = new Node(val);
@@ -16,22 +18,25 @@ public class Tree {
         reorder(node);
     }
 
-    private Node insert(Node root, Node node) {
+    private Node insert(Node parent, Node node) {
 
-        if(root == null) {
+        if(parent == null) {
             return node;
         }
 
-        if(node.value < root.value) {
-            root.left = insert(root.left, node);
-            root.left.parent = root;
+        if(node.value < parent.value) {
+            parent.left = insert(parent.left, node);
+            parent.left.parent = parent;
+        }
+        else if(node.value > parent.value) {
+            parent.right = insert(parent.right, node);
+            parent.right.parent = parent;
+        }
+        else {
+            node.isBlack = true;
         }
 
-        if(node.value > root.value) {
-            root.right = insert(root.right, node);
-            root.right.parent = root;
-        }
-        return root;
+        return parent;
     }
 
     private void reorder(Node node) {
@@ -64,6 +69,7 @@ public class Tree {
                     boolean b = p.isBlack;
                     p.isBlack = g.isBlack;
                     g.isBlack = b;
+
                     node = p;
                 }
             } else {
@@ -145,24 +151,99 @@ public class Tree {
 
     public void print() {
 
-        List<Node> list = new ArrayList<>();
-        list.add(root);
+        if(root == null) {
+            return;
+        }
 
-        while(!list.isEmpty()) {
+        int height = getHeight(root);
 
-            Node cur = list.get(0);
+        for(int i = 0; i < height; i++) {
+            printedTree.add(new StringBuilder());
+        }
 
-            if(cur.left != null) {
+        printSubTree(root, height);
 
-                list.add(cur.left);
-            }
-
-            if(cur.right != null) {
-                list.add(cur.right);
-            }
-            System.out.println(cur.toString());
-
-            list.remove(cur);
+        for(int i = height - 1; i >= 0; i--) {
+            System.out.println(printedTree.get(i).toString());
         }
     }
+
+    private void printSubTree(Node node, int height) {
+
+        if(height == 0) {
+            return;
+        }
+        int indents = ((int)Math.pow(2, height) - 2) / 2;
+
+        printedTree.get(height - 1)
+                .append(printIndent(indents))
+                .append(printValue(node))
+                .append(printIndent(indents + 1));
+
+
+        if(node.left != null) {
+            printSubTree(node.left, height - 1);
+        } else {
+            for(int i = height - 2; i >= 0; i--) {
+                printedTree.get(i).append(printIndent(indents + 1));
+            }
+        }
+
+        if(node.right != null) {
+            printSubTree(node.right, height - 1);
+        } else {
+            for(int i = height - 2; i >= 0; i--) {
+                printedTree.get(i).append(printIndent(indents + 1));
+            }
+        }
+    }
+
+    private String printValue(Node node) {
+        if(node.value < 10) {
+            return " " + node.value + (node.isBlack ? "b" : "r");
+        } else {
+            return "" + node.value + (node.isBlack ? "b" : "r");
+        }
+    }
+
+    private String printIndent(int indents) {
+        String indent = "   ";
+
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < indents; i++) {
+            sb.append(indent);
+        }
+        return sb.toString();
+    }
+
+    private int temp = 1;
+    private int treeHeight = 1;
+
+    private int getHeight(Node node) {
+
+        if(root == null) {
+            temp = 0;
+            treeHeight = 0;
+        }
+
+        if(node.right != null) {
+            if(++temp > treeHeight) {
+                treeHeight = temp;
+            }
+            getHeight(node.right);
+            temp--;
+        }
+
+        if(node.left != null) {
+            if(++temp > treeHeight) {
+                treeHeight = temp;
+            }
+            getHeight(node.left);
+            temp--;
+        }
+        return treeHeight;
+    }
+
+
 }

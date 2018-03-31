@@ -6,7 +6,7 @@ public class Runner {
 
     public void run() {
 
-        int[] values = generateArray(9);
+        int[] values = generateArray(25);
 
         buildTree(values);
 
