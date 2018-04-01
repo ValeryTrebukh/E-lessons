@@ -7,7 +7,7 @@ public class Tree {
 
     private Node root;
 
-    private List<StringBuilder> printedTree = new ArrayList<>();
+    private List<StringBuilder> printedTree;
 
     public void insert(int val) {
 
@@ -15,7 +15,7 @@ public class Tree {
 
         root = insert(root, node);
 
-        reorder(node);
+        reorderInsert(node);
     }
 
     private Node insert(Node parent, Node node) {
@@ -39,7 +39,7 @@ public class Tree {
         return parent;
     }
 
-    private void reorder(Node node) {
+    private void reorderInsert(Node node) {
 
         Node p = null;
         Node g = null;
@@ -149,11 +149,189 @@ public class Tree {
 
     }
 
+    public void delete(int value) {
+
+        if(root != null) {
+            delete(root, value);
+        }
+    }
+
+    private void delete(Node node, int value) {
+
+        if(value < node.value) {
+            delete(node.left, value);
+        }
+        else if (value > node.value) {
+            delete(node.right, value);
+        }
+        else {
+            if(node.right != null && node.left != null) {
+                node.value = subTreeMinValue(node.right);
+                delete(node.right, node.value);
+            }
+            else {
+                fixViolations(node);
+
+                if(node == node.parent.left) {
+                    node.parent.left = null;
+                }
+                else if(node == node.parent.right) {
+                    node.parent.right = null;
+                }
+            }
+        }
+    }
+
+    private int subTreeMinValue(Node node) {
+
+        int min = node.value;
+
+        while(node.left != null) {
+            min = node.left.value;
+            node = node.left;
+        }
+
+        return min;
+    }
+
+    private void fixViolations(Node node) {
+                                      // if node is red - delete this node
+        if(node.isBlack) {            // if node has red child - replace the node with child and change color to black
+            if (node.left != null) {
+                node.left.isBlack = true;
+                node.left.parent = node.parent;
+
+                if(node == node.parent.left) {
+                    node.parent.left = node.left;
+                }
+                else if(node == node.parent.right) {
+                    node.parent.right = node.left;
+                }
+            }
+            else if (node.right != null) {
+                node.right.isBlack = true;
+                node.right.parent = node.parent;
+
+                if(node == node.parent.left) {
+                    node.parent.left = node.right;
+                }
+                else if(node == node.parent.right) {
+                    node.parent.right = node.right;
+                }
+            }
+            else {                    //children are null
+                deleteCase1(node);
+            }
+        }
+    }
+
+    private void deleteCase1(Node node) {
+        if(node.parent != null) {
+            deleteCase2(node);
+        } else {
+            root = null;
+        }
+    }
+
+    private void deleteCase2(Node node) {
+        Node sibling = sibling(node);
+
+        if(!sibling.isBlack) {
+            node.parent.isBlack = false;
+            sibling.isBlack = true;
+            if(node == node.parent.left) {
+                rotateLeft(node.parent);
+            }
+            else {
+                rotateRight(node.parent);
+            }
+        }
+
+        deleteCase3(node);
+    }
+
+    private void deleteCase3(Node node) {
+        Node sibling = sibling(node);
+
+        if(node.parent.isBlack && sibling.isBlack &&
+                (sibling.left == null || sibling.left.isBlack) &&
+                (sibling.right == null || sibling.right.isBlack)) {
+
+            sibling.isBlack = false;
+
+            deleteCase1(node.parent);
+        }
+        else {
+            deleteCase4(node);
+        }
+    }
+
+    private void deleteCase4(Node node) {
+        Node sibling = sibling(node);
+
+        if(!node.parent.isBlack && sibling.isBlack &&
+                (sibling.left == null || sibling.left.isBlack) &&
+                (sibling.right == null || sibling.right.isBlack)) {
+
+            sibling.isBlack = false;
+            node.parent.isBlack = true;
+        }
+        else {
+            deleteCase5(node);
+        }
+    }
+
+    private void deleteCase5(Node node) {
+        Node sibling = sibling(node);
+
+        if(sibling.isBlack) {
+            if((node == node.parent.left) && (sibling.right == null || sibling.right.isBlack) &&
+                    (sibling.left != null && !sibling.left.isBlack)) {
+
+                sibling.isBlack = false;
+                sibling.left.isBlack = true;
+                rotateRight(sibling);
+            }
+            else if((node == node.parent.right) && (sibling.left == null || sibling.left.isBlack) &&
+                    (sibling.right != null && !sibling.right.isBlack)) {
+
+                sibling.isBlack = false;
+                sibling.right.isBlack = true;
+                rotateLeft(sibling);
+            }
+        }
+
+        deleteCase6(node);
+    }
+
+    private void deleteCase6(Node node) {
+        Node sibling = sibling(node);
+
+        sibling.isBlack = node.parent.isBlack;
+        node.parent.isBlack = true;
+
+        if(node == node.parent.left) {
+            sibling.right.isBlack = true;
+            rotateLeft(node.parent);
+        }
+        else {
+            sibling.left.isBlack = true;
+            rotateRight(node.parent);
+        }
+    }
+
+    private Node sibling(Node node) {
+        return node.parent.left == node ? node.parent.right : node.parent.left;
+    }
+
+
     public void print() {
 
         if(root == null) {
             return;
         }
+
+        printedTree = new ArrayList<>();
 
         int height = getHeight(root);
 
@@ -184,17 +362,19 @@ public class Tree {
         if(node.left != null) {
             printSubTree(node.left, height - 1);
         } else {
-            for(int i = height - 2; i >= 0; i--) {
-                printedTree.get(i).append(printIndent(indents + 1));
-            }
+            printEmptySubTree(height, indents);
         }
 
         if(node.right != null) {
             printSubTree(node.right, height - 1);
         } else {
-            for(int i = height - 2; i >= 0; i--) {
-                printedTree.get(i).append(printIndent(indents + 1));
-            }
+            printEmptySubTree(height, indents);
+        }
+    }
+
+    private void printEmptySubTree(int height, int indents) {
+        for(int i = height - 2; i >= 0; i--) {
+            printedTree.get(i).append(printIndent(indents + 1));
         }
     }
 
@@ -244,6 +424,4 @@ public class Tree {
         }
         return treeHeight;
     }
-
-
 }

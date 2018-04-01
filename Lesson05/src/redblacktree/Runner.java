@@ -6,14 +6,18 @@ public class Runner {
 
     public void run() {
 
-        int[] values = generateArray(25);
+        int[] values = generateArray(27);
 
+        System.out.println("UNSORTED ARRAY");
         buildTree(values);
 
+        System.out.println();
+        System.out.println(" ---------------------------------------------------------------------------------------- ");
         System.out.println();
 
         Arrays.sort(values);
 
+        System.out.println("SORTED ARRAY");
         buildTree(values);
     }
 
@@ -25,6 +29,12 @@ public class Runner {
         }
 
         System.out.println(Arrays.toString(values));
+
+        tree.print();
+
+        System.out.println("\ndelete " + values[1]);
+
+        tree.delete(values[1]);
 
         tree.print();
     }
