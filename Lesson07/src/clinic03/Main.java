@@ -8,16 +8,18 @@ import org.apache.log4j.Logger;
 
 public class Main {
 
-    public static Logger rootLogger = Logger.getRootLogger();
+    private static Logger rootLogger = Logger.getRootLogger();
 
     public static void main(String[] args) {
 
         Clinic clinic = new Clinic();
         ClinicView view = new ClinicView();
 
+        rootLogger.info("Application started");
+
         ClinicController controller = new ClinicController(clinic, view);
-        rootLogger.debug("before run method");
+
         controller.run();
-        rootLogger.debug("Application closed");
+
     }
 }
