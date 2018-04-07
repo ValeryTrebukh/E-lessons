@@ -3,6 +3,7 @@ package task02;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class Runner {
 
@@ -20,7 +21,9 @@ public class Runner {
 
         System.out.println(field.get(u));
 
-        field.set(u, 49.5);
+        Method method = cl.getMethod("incrementValue");
+
+        method.invoke(u);
 
         System.out.println(u.toString());
     }
