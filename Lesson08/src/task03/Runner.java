@@ -1,5 +1,6 @@
 package task03;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +22,13 @@ public class Runner {
 
         list.sort((s1, s2) -> s2.compareTo(s1));
 
-        System.out.println(Arrays.toString(list.toArray()));
+        System.out.println(list);
+
+
+        //task 8.4
+        System.out.println(sumWithCondition(array, (x)->x/10));
+
+        System.out.println(filterWithCondition(list, (s)-> s.startsWith("с")));
 
     }
 
@@ -32,5 +39,33 @@ public class Runner {
             result[i] = (int)(Math.random()*100);
         }
         return result;
+    }
+
+    //task 8.4
+    private int sumWithCondition(Integer[] arr, SumFunction func) {
+        int result = 0;
+        for(int val : arr) {
+            result += func.sum(val);
+        }
+        return result;
+    }
+
+    private List<String> filterWithCondition(List<String> list, FilterFunction func) {
+        List<String> result = new ArrayList<>();
+
+        for(String s : list) {
+            if(func.filter(s)){
+                result.add(s);
+            }
+        }
+        return result;
+    }
+
+    interface SumFunction {
+        int sum(int val);
+    }
+
+    interface FilterFunction {
+        boolean filter(String str);
     }
 }
