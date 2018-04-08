@@ -1,4 +1,4 @@
-package task03;
+package task05;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +29,10 @@ public class Runner {
         System.out.println(sumWithCondition(array, (x)->x/10));
 
         System.out.println(filterWithCondition(list, (s)-> s.startsWith("с")));
+
+        convertStrings(list);
+
+        System.out.println(list);
 
     }
 
@@ -67,5 +71,17 @@ public class Runner {
 
     private interface FilterFunction {
         boolean filter(String str);
+    }
+
+    private void convertStrings(List<String> list) {
+
+        StringConverter sc = String::toUpperCase;
+        String str;
+        for(int i = 0; i < list.size(); i++) {
+            str = list.get(i);
+            if(sc.isExist(str)) {
+                list.set(i, sc.convert(str));
+            }
+        }
     }
 }
