@@ -72,7 +72,7 @@ public class ClinicController {
         }
 
         if (input == 1) {
-            bundle = ResourceBundle.getBundle("location.lang");
+            bundle = ResourceBundle.getBundle("location.lang_en");
         } else {
             bundle = ResourceBundle.getBundle("location.lang_ru");
         }
