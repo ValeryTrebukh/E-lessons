@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 class Runner {
     private AbstractMap<Integer, String> map;
     private Runnable sw, sr, cw, cr;
-    private final int NUM_THREADS = 8;
-    private final int MAP_SIZE = 2_000_000;
+    private final int NUM_THREADS = 4;
+    private final int MAP_SIZE = 10_000_000;
 
     {
          sw = () -> {
@@ -54,44 +54,40 @@ class Runner {
         Long s1;
 
         s1 = new Date().getTime();
-        syncWrite(sw);
+        startThreads(sw);
         System.out.println("synchronized write time: " + (new Date().getTime() - s1));
 
         s1 = new Date().getTime();
-        syncRead(sr);
+        startThreads(sr);
         System.out.println("synchronized read time: " + (new Date().getTime() - s1));
 
 
         map = new ConcurrentHashMap<>();
-        Thread.sleep(100);
 
         s1 = new Date().getTime();
-        syncWrite(cw);
+        startThreads(cw);
         System.out.println("concurrent write time: " + (new Date().getTime() - s1));
 
         s1 = new Date().getTime();
-        syncRead(cr);
+        startThreads(cr);
         System.out.println("concurrent read time: " + (new Date().getTime() - s1));
 
     }
 
-    private void syncWrite(Runnable runnable) throws InterruptedException {
-        startThreads(runnable);
-        while(map.size() < MAP_SIZE) {
-            Thread.sleep(1);
-        }
-    }
-
-    private void syncRead(Runnable runnable) throws InterruptedException {
-        startThreads(runnable);
-        while(!map.isEmpty()) {
-            Thread.sleep(1);
-        }
-    }
 
     private void startThreads(Runnable runnable) {
+        Thread[] threads = new Thread[NUM_THREADS];
         for(int i = 0; i < NUM_THREADS; i++) {
-            new Thread(runnable).start();
+            threads[i] = new Thread(runnable);
+            threads[i].start();
+        }
+
+        for(int i = 0; i < NUM_THREADS; i++) {
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
