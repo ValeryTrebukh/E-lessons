@@ -9,7 +9,7 @@ class Runner {
     private AbstractMap<Integer, String> map;
     private Runnable sw, sr, cw, cr;
     private final int NUM_THREADS = 4;
-    private final int MAP_SIZE = 10_000_000;
+    private final int MAP_SIZE = 4_000_000;
 
     {
          sw = () -> {
@@ -50,7 +50,7 @@ class Runner {
 
     void run() throws InterruptedException {
 
-        map = new HashMap<>();
+        map = new HashMap<>(1000, 0.8f);
         Long s1;
 
         s1 = new Date().getTime();
@@ -62,7 +62,7 @@ class Runner {
         System.out.println("synchronized read time: " + (new Date().getTime() - s1));
 
 
-        map = new ConcurrentHashMap<>();
+        map = new ConcurrentHashMap<>(1000, 0.8f);
 
         s1 = new Date().getTime();
         startThreads(cw);
