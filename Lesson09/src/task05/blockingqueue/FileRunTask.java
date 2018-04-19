@@ -1,30 +1,32 @@
-package task05;
+package task05.blockingqueue;
 
 import java.io.File;
 import java.util.concurrent.BlockingQueue;
 
 class FileRunTask implements Runnable {
-    private BlockingQueue<File> que;
+    private BlockingQueue<File> queue;
     private File startDir;
     static File EXIT = new File("");
 
-    FileRunTask(BlockingQueue <File> que, File startDir) {
-        this.que = que;
+    FileRunTask(BlockingQueue <File> queue, File startDir) {
+        this.queue = queue;
         this.startDir = startDir;
     }
+
+    @Override
     public void run() {
         try {
             runDir(startDir);
-            que.put(EXIT);
+            queue.put(EXIT);
         } catch (InterruptedException ignore) { }
     }
 
-    void runDir(File dir) throws InterruptedException {
+    private void runDir(File dir) throws InterruptedException {
         File[] files = dir.listFiles();
         for (File ff: files)
             if (ff.isDirectory())
                 runDir(ff);
             else
-                que.put(ff);
+                queue.put(ff);
     }
 }

@@ -1,28 +1,29 @@
-package task05;
+package task05.blockingqueue;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SearchTask implements Runnable {
-    private BlockingQueue<File> que;
+    private BlockingQueue<File> queue;
     private String word;
     private Pattern p = Pattern.compile("[\\w\\-']+");
-    private Matcher m;
-    int wordsCount = 0;
+    private ConcurrentMap<File, Integer> set;
 
-    SearchTask(BlockingQueue<File> que, String word) {
-        this.que = que;
+    SearchTask(BlockingQueue<File> queue, String word, ConcurrentMap<File, Integer> set) {
+        this.queue = queue;
         this.word = word;
+        this.set = set;
+
     }
 
-    void search(File ff) throws IOException {
+    private void search(File ff) throws IOException {
         Scanner sc = new Scanner(new FileInputStream(ff));
-
+        Matcher m;
+        int wordsCount = 0;
         while (sc.hasNextLine()) {
             String str = sc.nextLine();
             m = p.matcher(str);
@@ -32,22 +33,28 @@ public class SearchTask implements Runnable {
                 }
             }
         }
+        if(wordsCount > 0) {
+            set.put(ff, wordsCount);
+        }
         sc.close();
-        System.out.println(ff + ": " + wordsCount);
     }
 
+    @Override
     public void run() {
         try {
             while (true) {
-                File ff = que.take();
+                File ff = queue.take();
                 if (ff == FileRunTask.EXIT) {
-                    que.put(ff);
+                    queue.put(ff);
                     break;
                 } else search(ff);
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-        }
+        } catch (InterruptedException ignore) {}
     }
+
 }
+
+//  /home/john/work/java/epam/src/project02
+//  /home/john/work/java/results
