@@ -1,30 +1,25 @@
 package task05.blockingqueue;
 
+import task05.utils.Helper;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.*;
 
 class Runner {
 
     void run() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter directory to lookup: ");
-        String dir = sc.next();
-        System.out.print("Enter symbol: ");
-        String smb = sc.next();
-        System.out.print("Enter destination file: ");
-        String destinationFileName = sc.next();
+        File baseDir = Helper.getDirectory();
+        String smb = Helper.getSymbol();
+        File destFile = Helper.getFile();
         ConcurrentMap<File, Integer> set = new ConcurrentHashMap<>();
 
-
         BlockingQueue<File> que = new ArrayBlockingQueue<>(10);
-        FileRunTask running = new FileRunTask(que, new File(dir));
+        FileRunTask running = new FileRunTask(que, baseDir);
         new Thread(running).start();
 
         Thread[] threads = new Thread[50];
@@ -42,12 +37,12 @@ class Runner {
         }
 
         List<String> lines = new ArrayList<>();
-        lines.add("Looking for words staring from '" + smb + "' into folder: " + dir);
+        lines.add("Looking for words staring from '" + smb + "' into folder: " + baseDir.getName());
         for(Map.Entry<File, Integer> entry : set.entrySet()) {
-            lines.add(Paths.get(dir).relativize(entry.getKey().toPath()).toString() + ": "  + entry.getValue());
+            lines.add(baseDir.toPath().relativize(entry.getKey().toPath()).toString() + ": "  + entry.getValue());
         }
         try {
-            Files.write(Paths.get(destinationFileName), lines);
+            Files.write(destFile.toPath(), lines);
         } catch (IOException e) {
             e.printStackTrace();
         }
