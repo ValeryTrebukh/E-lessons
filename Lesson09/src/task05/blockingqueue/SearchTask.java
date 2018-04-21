@@ -55,6 +55,3 @@ public class SearchTask implements Runnable {
     }
 
 }
-
-//  /home/john/work/java/epam/src/project02
-//  /home/john/work/java/results
