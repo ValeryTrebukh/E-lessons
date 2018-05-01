@@ -1,72 +1,36 @@
 package dao;
 
 import java.sql.*;
-import java.util.ResourceBundle;
 
 public class Ups {
 
-    private ResourceBundle rb;
-    private Connection con;
+    private DBConnection dbConnection;
     private Statement st;
-    {
-        rb = ResourceBundle.getBundle("mysqldb");
-        try {
-            con = DriverManager.getConnection(
-                    rb.getString("database.url"),
-                    rb.getString("database.username"),
-                    rb.getString("database.password"));
-            st = con.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    private PreparedStatement pst;
 
     public void main() {
+        dbConnection = new DBConnection(DB.MYSQL);
+        st = dbConnection.getStatement();
 
         getAllEmployees();
         getAllTasks();
-        getAllEmployeeByDepartmentId("logistic");
+        getAllEmployeeByDepartmentName("logistic");
         addTaskForEmployee(1001, "weekly report");
-        getAllTasksForEmployee(1001);
+        getAllTasksByEmployeeId(1006);
         deleteEmployee(1006);
+        getAllTasks();
         getAllEmployees();
-    }
 
-    private void deleteEmployee(int empId) {
         try {
-            st.executeUpdate("DELETE FROM employees WHERE id=" + empId);
+            dbConnection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println();
     }
 
-    private void getAllTasksForEmployee(int empId) {
+    private void getAllEmployees() {
         try {
-            ResultSet rs = st.executeQuery("SELECT * FROM tasks WHERE emp_id=" + empId);
-            printRow(rs);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println();
-    }
-
-    private boolean addTaskForEmployee(int empId, String task) {
-
-        try {
-            st.executeUpdate("INSERT INTO tasks (description, emp_id) VALUES ('" + task + "', " + empId + ")");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        System.out.println();
-        return true;
-    }
-
-    private void getAllEmployeeByDepartmentId(String department) {
-        try {
-            ResultSet rs = st.executeQuery("SELECT employees.last_name, employees.first_name FROM employees JOIN departments ON " +
-                    "employees.dept_id = departments.id WHERE departments.name='" + department + "'");
+            ResultSet rs = st.executeQuery("SELECT * FROM employees");
             printRow(rs);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,15 +48,60 @@ public class Ups {
         System.out.println();
     }
 
-    private void getAllEmployees() {
+    private void getAllEmployeeByDepartmentName(String department) {
         try {
-            ResultSet rs = st.executeQuery("SELECT * FROM employees");
+            PreparedStatement pst = dbConnection.getPreparedStatement(
+                    "SELECT employees.last_name, employees.first_name FROM employees JOIN departments ON " +
+                            "employees.dept_id = departments.id WHERE departments.name=?");
+            pst.setString(1, department);
+            ResultSet rs = pst.executeQuery();
             printRow(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println();
     }
+
+    private boolean addTaskForEmployee(int empId, String task) {
+
+        try {
+            pst = dbConnection.getPreparedStatement("INSERT INTO tasks (description, emp_id) VALUES (?, ?)");
+            pst.setString(1, task);
+            pst.setInt(2, empId);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        System.out.println();
+        return true;
+    }
+
+    private void getAllTasksByEmployeeId(int empId) {
+        try {
+            pst = dbConnection.getPreparedStatement("SELECT * FROM tasks WHERE emp_id=?");
+            pst.setInt(1, empId);
+            ResultSet rs = pst.executeQuery();
+            printRow(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+    }
+
+    private boolean deleteEmployee(int empId) {
+        try {
+            pst = dbConnection.getPreparedStatement("DELETE FROM employees WHERE id=?");
+            pst.setInt(1, empId);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        System.out.println();
+        return true;
+    }
+
 
     private void printRow(ResultSet rs) throws SQLException {
         StringBuilder sb;
@@ -107,5 +116,6 @@ public class Ups {
                 System.out.println(sb.toString());
             }
         }
+        rs.close();
     }
 }
