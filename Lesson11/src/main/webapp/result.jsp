@@ -7,8 +7,7 @@
     <title>Result</title>
 </head>
 <body>
-    <%--<jsp:useBean id="angle" scope="request" type="elessons.lesson11.model.Angle"/>--%>
-    <%--RESULT: <jsp:getProperty name="angle" property="result"/>--%>
-    RESULT:<fmt:formatNumber type="number" pattern = "${angle.pattern}" value = "${angle.result}" />
+    cos(${angle}) = <fmt:formatNumber type="number" pattern = "${pattern}" value = "${result}" /> <br>
+    <a href="calc">back</a>
 </body>
 </html>
