@@ -7,7 +7,7 @@
     <title>Result</title>
 </head>
 <body>
-    cos(${angle}) = <fmt:formatNumber type="number" pattern = "${pattern}" value = "${result}" /> <br>
+    ${func}(${angle}) = <fmt:formatNumber type="number" pattern = "${pattern}" value = "${result}" /> <br>
     <a href="calc">back</a>
 </body>
 </html>

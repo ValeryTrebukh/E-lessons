@@ -35,6 +35,7 @@ public class TrigonometryServlet extends HttpServlet {
 
         req.setAttribute("result", mf.calc(angle));
         req.setAttribute("pattern", getPrecisionPattern(prec));
+        req.setAttribute("func", func);
     }
 
     private String getPrecisionPattern(int prec) {
